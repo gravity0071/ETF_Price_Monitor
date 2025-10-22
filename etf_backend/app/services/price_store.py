@@ -60,3 +60,12 @@ class PriceStore:
         if not self.ready:
             return []
         return list(self.data_map.keys())
+
+    def get_latest_price(self, symbol: str):
+        if not self.ready:
+            return None
+        print("getting latest price of {}", symbol)
+        price_obj = self.data_map.get(symbol)
+        date, price = price_obj.prices[-1]
+
+        return {"symbol": symbol, "date": date, "price": price}
