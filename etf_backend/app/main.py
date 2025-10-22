@@ -61,3 +61,7 @@ def get_chart(session_id: str = Query(...), start: str = Query(None), end: str =
     calculator = etf_calculator(price_store)
     chart_data = calculator.compute_chart_with_date(df, start, end)
     return chart_data
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("app.main:app", host="127.0.0.1", port=8000, reload=True)
