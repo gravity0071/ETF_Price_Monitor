@@ -30,13 +30,12 @@ def startup_event():
 def upload_etf(
     file: UploadFile = File(...),
     session_id: str = Query(None),
-    start: str = Query(None),
-    end: str = Query(None),
+    days: int = Query(90),
 ):
     etf_df = pd.read_csv(file.file)
 
     calculator = etf_calculator(price_store)
-    result = calculator.compute_all(etf_df, start=start, end=end)
+    result = calculator.compute_all(etf_df, days=days)
 
     sid = session_store.create_or_update_session(result["merged_df"], session_id)
     # print({"session_id": sid, **{k: v for k, v in result.items() if k != "merged_df"}})

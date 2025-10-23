@@ -3,7 +3,9 @@ from app.services.etf_chart import etf_chart
 from app.services.etf_table import etf_table
 from app.services.etf_top_holdings import etf_top_holdings
 from typing import Dict
-from app.services.price_store import PriceStore, Price
+from app.services.price_store import PriceStore
+from datetime import timedelta
+
 
 class etf_calculator:
 
@@ -28,15 +30,15 @@ class etf_calculator:
         # print(df.sort_values("Date").reset_index(drop=True))
         return df.sort_values("Date").reset_index(drop=True)
 
-    def compute_all(self, etf_df: pd.DataFrame, start: str = None, end: str = None):
+    def compute_all(self, etf_df: pd.DataFrame, days: int = 90):
         df = self._merge_etf_with_prices(etf_df)
         table = etf_table(df).compute()
         top5 = etf_top_holdings(df).compute()
 
-        if start or end:
-            chart = self.compute_chart_with_date(df, start=start, end=end)
-        else:
-            chart = etf_chart(df).compute()
+        end_date = pd.to_datetime(df["Date"].max()).date()
+        start_date = end_date - timedelta(days=days - 1)
+
+        chart = self.compute_chart_with_date(df, start=start_date.isoformat(), end=end_date.isoformat())
 
         return {"merged_df": df, "table": table, "chart": chart, "top5": top5}
     def compute_chart_with_date(self, df: pd.DataFrame, start: str = None, end: str = None) -> Dict:
