@@ -42,14 +42,18 @@ def startup_event():
 
 
 @app.post("/upload")
-async def upload_etf(file: UploadFile = File(...), session_id: str = Query(None)):
+def upload_etf(
+    file: UploadFile = File(...),
+    session_id: str = Query(None),
+    start: str = Query(None),
+    end: str = Query(None),
+):
     etf_df = pd.read_csv(file.file)
-    # print(session_id)
 
     calculator = etf_calculator(price_store)
-    result = calculator.compute_all(etf_df)
+    result = calculator.compute_all(etf_df, start=start, end=end)
 
-    sid = session_store.create_or_update_session(result["merged_df"], session_id)  #put the combined dataframe into session
+    sid = session_store.create_or_update_session(result["merged_df"], session_id)
     return {"session_id": sid, **{k: v for k, v in result.items() if k != "merged_df"}}
 
 

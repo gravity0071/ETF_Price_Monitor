@@ -28,12 +28,16 @@ class etf_calculator:
         # print(df.sort_values("Date").reset_index(drop=True))
         return df.sort_values("Date").reset_index(drop=True)
 
-    def compute_all(self, etf_df: pd.DataFrame):
+    def compute_all(self, etf_df: pd.DataFrame, start: str = None, end: str = None):
         df = self._merge_etf_with_prices(etf_df)
         table = etf_table(df).compute()
-        chart = etf_chart(df).compute()
         top5 = etf_top_holdings(df).compute()
-        return {"merged_df": df, "table": table, "chart": chart, "top5": top5}
 
+        if start or end:
+            chart = self.compute_chart_with_date(df, start=start, end=end)
+        else:
+            chart = etf_chart(df).compute()
+
+        return {"merged_df": df, "table": table, "chart": chart, "top5": top5}
     def compute_chart_with_date(self, df: pd.DataFrame, start: str = None, end: str = None) -> Dict:
         return etf_chart(df).compute(start=start, end=end)
