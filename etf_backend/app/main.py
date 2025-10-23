@@ -5,9 +5,14 @@ import pandas as pd
 from app.services.etf_calculator import etf_calculator
 from app.services.price_store import PriceStore
 from app.services.session_store import etf_session_store
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+)
 price_store = None
 session_store = etf_session_store()
 
@@ -20,26 +25,6 @@ def startup_event():
     price_store.start()
     session_store = etf_session_store()
     print("PriceStore and SessionStore initialized.")
-
-# @app.get("/symbols")
-# def symbols():
-#     return {"symbols": price_store.get_all_symbols(), "last_update": price_store.last_update}
-
-# @app.get("/prices/{symbol}")
-# def prices(symbol: str):
-#     p = price_store.get_symbol(symbol)
-#     if p is None:
-#         return {"error": "Data not ready or symbol not found"}
-#     return {"symbol": p.symbol, "data": p.prices[:20]}
-#
-# @app.get("/last/{symbol}")
-# def last(symbol: str):
-#     p = price_store.get_latest_price(symbol)
-#     if p is None:
-#         return {"error": "Data not ready or symbol not found"}
-#     print(p)
-#     return p
-
 
 @app.post("/upload")
 def upload_etf(
@@ -54,6 +39,7 @@ def upload_etf(
     result = calculator.compute_all(etf_df, start=start, end=end)
 
     sid = session_store.create_or_update_session(result["merged_df"], session_id)
+    # print({"session_id": sid, **{k: v for k, v in result.items() if k != "merged_df"}})
     return {"session_id": sid, **{k: v for k, v in result.items() if k != "merged_df"}}
 
 
@@ -64,6 +50,7 @@ def get_chart(session_id: str = Query(...), start: str = Query(None), end: str =
         return {"error": "Session not found"}
     calculator = etf_calculator(price_store)
     chart_data = calculator.compute_chart_with_date(df, start, end)
+    # print(chart_data)
     return chart_data
 
 if __name__ == "__main__":
