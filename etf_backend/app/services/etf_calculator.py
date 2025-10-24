@@ -15,8 +15,6 @@ class etf_calculator:
         self.price_store = price_store
 
     def _merge_etf_with_prices(self, etf_df: pd.DataFrame) -> pd.DataFrame:
-        # Check that all names in etf_df["name"] exist in self.price_store.data_map
-        if
         etf_names = etf_df["name"].unique()
         data_map = self.price_store.data_map
 
