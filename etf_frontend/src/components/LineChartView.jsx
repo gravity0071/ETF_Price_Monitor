@@ -31,14 +31,14 @@ const LineChartView = ({chartData}) => {
                 trigger: "axis",
                 formatter: (params) => {
                     const p = params[0];
-                    return `${p.axisValue}<br/>💰 Price: ${p.value.toFixed(3)}`;
+                    return `${p.axisValue}<br/>Price: ${p.value.toFixed(3)}`;
                 },
                 backgroundColor: "rgba(50, 50, 50, 0.9)",
                 textStyle: {color: "#fff", fontSize: 12},
                 axisPointer: {type: "line"},
             },
             grid: {
-                top: 60,
+                top: 50,
                 left: 50,
                 right: 40,
                 bottom: 40,
@@ -70,7 +70,7 @@ const LineChartView = ({chartData}) => {
                     type: "inside",
                     zoomOnMouseWheel: true,
                     moveOnMouseMove: true,
-                    moveOnMouseWheel: true,
+                    moveOnMouseWheel: false,
                     throttle: 40,
                 },
             ],
@@ -78,7 +78,7 @@ const LineChartView = ({chartData}) => {
                 {
                     name: "ETF Price",
                     type: "line",
-                    smooth: true,
+                    smooth: false,
                     data: chartData.etf_price,
                     lineStyle: {
                         width: 2,
@@ -91,7 +91,7 @@ const LineChartView = ({chartData}) => {
                     },
                     emphasis: {
                         focus: "series",
-                        scale: 1.3,
+                        scale: 1.7,
                     },
                 },
             ],

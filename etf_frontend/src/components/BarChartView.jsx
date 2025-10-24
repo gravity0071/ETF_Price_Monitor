@@ -9,16 +9,7 @@ import {
     ResponsiveContainer,
 } from "recharts";
 
-const BarChartView = ({
-                          data,
-                          dataKeyX = "symbol",
-                          dataKeyY = "holding_value",
-                          title = "Top 5 Holdings",
-                      }) => {
-    if (!Array.isArray(data) || data.length === 0) {
-        return <p style={{ color: "gray", textAlign: "center" }}>No data available</p>;
-    }
-
+const BarChartView = ({data}) => {
     return (
         <div
             style={{
@@ -29,22 +20,21 @@ const BarChartView = ({
                 justifyContent: "center",
             }}
         >
-            <h3 style={{ textAlign: "center", marginBottom: "10px" }}>{title}</h3>
+            <h3 style={{ textAlign: "center", marginBottom: "10px" }}>Top 5 Holdings</h3>
             <ResponsiveContainer>
                 <BarChart data={data} margin={{ top: 10, right: 20, left: 10, bottom: 10 }}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey={dataKeyX} />
+                    <XAxis dataKey="symbol" />
                     <YAxis />
                     <Tooltip
                         formatter={(value) => value.toFixed(2)}
                         contentStyle={{
                             backgroundColor: "rgba(0,0,0,0.75)",
-                            border: "none",
                             color: "#fff",
                         }}
                     />
                     <Bar
-                        dataKey={dataKeyY}
+                        dataKey="holding_value"
                         fill="#007aff"
                         radius={[6, 6, 0, 0]}
                     />

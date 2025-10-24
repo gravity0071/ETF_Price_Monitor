@@ -17,10 +17,26 @@ const UploadPanel = ({ onUploaded }) => {
             const res = await axios.post(`http://127.0.0.1:8000/upload?days=${days}`, formData, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
-            onUploaded?.(res.data);
+            if (onUploaded) {
+                onUploaded(res.data);
+            }
         } catch (err) {
             console.error(err);
-            alert("Upload failed. Please check your server connection.");
+
+            let msg = "Upload failed. Please check your server connection.";
+            if (err.response) {
+                if (err.response && err.response.data && err.response.data.detail) {
+                    msg = err.response.data.detail;
+                } else if (typeof err.response.data === "string") {
+                    msg = err.response.data;
+                } else {
+                    msg = JSON.stringify(err.response.data);
+                }
+            } else if (err.message) {
+                msg = err.message;
+            }
+
+            alert(msg);
         }
     };
 

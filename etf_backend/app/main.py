@@ -6,6 +6,7 @@ from app.services.etf_calculator import etf_calculator
 from app.services.price_store import PriceStore
 from app.services.session_store import etf_session_store
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 app = FastAPI()
 
@@ -32,14 +33,19 @@ def upload_etf(
     session_id: str = Query(None),
     days: int = Query(90),
 ):
-    etf_df = pd.read_csv(file.file)
+    try:
+        etf_df = pd.read_csv(file.file)
 
-    calculator = etf_calculator(price_store)
-    result = calculator.compute_all(etf_df, days=days)
+        calculator = etf_calculator(price_store)
+        result = calculator.compute_all(etf_df, days=days)
 
-    sid = session_store.create_or_update_session(result["merged_df"], session_id)
-    # print({"session_id": sid, **{k: v for k, v in result.items() if k != "merged_df"}})
-    return {"session_id": sid, **{k: v for k, v in result.items() if k != "merged_df"}}
+        sid = session_store.create_or_update_session(result["merged_df"], session_id)
+        # print({"session_id": sid, **{k: v for k, v in result.items() if k != "merged_df"}})
+        return {"session_id": sid, **{k: v for k, v in result.items() if k != "merged_df"}}
+    except ValueError as e:
+        return JSONResponse(status_code=400, content={"detail": str(e)})
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"detail": f"Server error: {e}"})
 
 
 @app.get("/chart")

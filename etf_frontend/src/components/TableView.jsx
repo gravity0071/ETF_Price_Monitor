@@ -29,10 +29,6 @@ function TableView({ data, title = "Holdings Table" }) {
         return sortConfig.direction === "asc" ? "▲" : "▼";
     };
 
-    if (!Array.isArray(data) || data.length === 0) {
-        return <p className="table-empty">No table data available</p>;
-    }
-
     return (
         <div className="table-container">
             <h3 className="table-title">{title}</h3>
@@ -42,13 +38,13 @@ function TableView({ data, title = "Holdings Table" }) {
                     <th>Symbol</th>
                     <th
                         onClick={() => handleSort("weight")}
-                        className={`sortable ${sortConfig.key === "weight" ? "active" : ""}`}
+                        className={`sortable`}
                     >
                         Weight <span className="arrow">{getArrow("weight")}</span>
                     </th>
                     <th
                         onClick={() => handleSort("latest_price")}
-                        className={`sortable ${sortConfig.key === "latest_price" ? "active" : ""}`}
+                        className={`sortable`}
                     >
                         Latest Price <span className="arrow">{getArrow("latest_price")}</span>
                     </th>

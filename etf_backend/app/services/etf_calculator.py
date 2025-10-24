@@ -15,16 +15,21 @@ class etf_calculator:
         self.price_store = price_store
 
     def _merge_etf_with_prices(self, etf_df: pd.DataFrame) -> pd.DataFrame:
+        # Check that all names in etf_df["name"] exist in self.price_store.data_map
+        if
+        etf_names = etf_df["name"].unique()
+        data_map = self.price_store.data_map
+
+        missing = [name for name in etf_names if name not in data_map]
+        if missing:
+            raise ValueError(f"Exists a name not matching backend price record: {missing}")
         frames = []
-        for symbol, obj in self.price_store.data_map.items():
-            if symbol not in etf_df["name"].values:
-                continue
+        for name in etf_names:
+            obj = data_map[name]
             tmp = pd.DataFrame(obj.prices, columns=["Date", "price"])
-            tmp["symbol"] = symbol
+            tmp["symbol"] = name
             frames.append(tmp)
 
-        if not frames:
-            raise ValueError("No matching symbols between ETF and prices.csv")
         df_prices = pd.concat(frames)
         df = df_prices.merge(etf_df, left_on="symbol", right_on="name", how="inner")
         # print(df.sort_values("Date").reset_index(drop=True))

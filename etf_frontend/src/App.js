@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import axios from "axios";
 import BarChartView from "./components/BarChartView";
 import LineChartView from "./components/LineChartView";
@@ -29,9 +29,9 @@ function App() {
 
         try {
             const res = await axios.get("http://127.0.0.1:8000/chart", {
-                params: { session_id: sessionId, start: startStr, end: endIsoStr },
+                params: {session_id: sessionId, start: startStr, end: endIsoStr},
             });
-            console.log(res);
+            // console.log(res);
             setChart(res.data);
         } catch (e) {
             console.error(e);
@@ -43,32 +43,35 @@ function App() {
         <div className="dashboard">
             <div className="line-chart-panel">
                 {chart ? (
-                    <LineChartView chartData={chart} />
+                    <>
+                        <LineChartView chartData={chart}/>
+                        <div className="timebar">
+                            <button onClick={() => fetchRange(7)}>1W</button>
+                            <button onClick={() => fetchRange(30)}>1M</button>
+                            <button onClick={() => fetchRange(90)}>3M</button>
+                            <button onClick={() => fetchRange(180)}>6M</button>
+                            <button onClick={() => fetchRange(365)}>1Y</button>
+                        </div>
+                    </>
                 ) : (
-                    <div style={{ padding: 16, color: "#666" }}>Please upload a CSV first</div>
+                    <div className="no-chart-warning">Please upload a CSV first</div>
                 )}
-                <div className="timebar">
-                    <button onClick={() => fetchRange(7)}>1W</button>
-                    <button onClick={() => fetchRange(30)}>1M</button>
-                    <button onClick={() => fetchRange(90)}>3M</button>
-                    <button onClick={() => fetchRange(180)}>6M</button>
-                    <button onClick={() => fetchRange(365)}>1Y</button>
-                </div>
             </div>
 
             <div className="table-panel">
-                {data?.table && <TableView data={data.table} />}
+                {data? (<TableView data={data.table}/>):(<div className="no-chart-warning">Please upload a CSV first</div>)}
             </div>
 
             <div className="bar-chart-panel">
-                {data?.top5 && <BarChartView data={data.top5} />}
+                {data?(<BarChartView data={data.top5}/>):(<div className="no-chart-warning">Please upload a CSV first</div>)}
             </div>
 
             <div className="upload-panel">
-                <UploadPanel onUploaded={handleUploaded} />
+                <UploadPanel onUploaded={handleUploaded}/>
             </div>
         </div>
-    );
+    )
+        ;
 }
 
 export default App;
