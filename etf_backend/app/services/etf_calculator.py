@@ -15,6 +15,9 @@ class etf_calculator:
         self.price_store = price_store
 
     def _merge_etf_with_prices(self, etf_df: pd.DataFrame) -> pd.DataFrame:
+        for col in ["name", "weight"]:
+            if col not in etf_df.columns:
+                raise ValueError(f"no column \"{col}\"")
         etf_names = etf_df["name"].unique()
         data_map = self.price_store.data_map
 
