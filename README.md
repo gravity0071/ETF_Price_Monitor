@@ -28,7 +28,7 @@ Frontend built with **React + ECharts + axios**, and backend powered by **python
 ```bash
 cd ../etf_frontend
 npm install
-nmp start
+npm start
 ```
  ### Run Backend
 ```bash
