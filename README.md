@@ -57,7 +57,7 @@ Content-Type: multipart/form-data
   "session_id": "abc123",
   "chart": {
     "date": ["2024-01-01", "2024-01-02", "..."],
-    "etf_price": [100.2, 101.8, 102.9]
+    "etf_price": [100.2, 101.8, "..."]
   },
   "table": [
     {"symbol": "AAPL", "weight": 0.12, "holding_value": 5231.8},
@@ -81,8 +81,8 @@ GET /chart?session_id=abc123&start=2024-01-01&end=2024-04-01
 - **successful Response:**
 ```json
 {
-  "date": ["2024-01-01", "2024-03-01"],
-  "etf_price": [100.2, 105.4, 108.9]
+  "date": ["2024-01-01", "2024-03-01", "..."],
+  "etf_price": [100.2, 105.4, "..."]
 }
 ```
  ### Session Management
