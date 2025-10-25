@@ -93,7 +93,7 @@ GET /chart?session_id=abc123&start=2024-01-01&end=2024-04-01
 ## Assumptions
 - The system supports a single-user session stored in memory using etf_session_store.
 - Each uploaded ETF CSV file must contain both “name” and “weight” columns.If either column is missing, the backend will raise an error, and the frontend will display an alert to notify the user.
-- All the data from ETF.csv file will have corresponding date and 
+- All the data from ETF.csv file will have corresponding date and constituent in the prices.csv.
 - All price data comes from a local prices.csv loaded by PriceStore.
 - PriceStore auto-refreshes itself periodically to keep all prices up to date.
 - /upload merges ETF and price data once and caches the result for reuse.
