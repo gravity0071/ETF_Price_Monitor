@@ -63,10 +63,11 @@ Content-Type: multipart/form-data
     {"symbol": "AAPL", "weight": 0.12, "holding_value": 5231.8},
     {"symbol": "MSFT", "weight": 0.10, "holding_value": 4872.3}
   ],
-  "stats": {
-    "total_value": 24920.4,
-    "daily_change": 1.26
-  }
+  "top5": [{
+            "symbol": "U",
+            "holding_value": 11.235019999999999
+        }
+]
 }
 ```
 
