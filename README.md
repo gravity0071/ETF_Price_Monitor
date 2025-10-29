@@ -60,8 +60,8 @@ Content-Type: multipart/form-data
     "etf_price": [100.2, 101.8, "..."]
   },
   "table": [
-    {"symbol": "AAPL", "weight": 0.12, "holding_value": 5231.8},
-    {"symbol": "MSFT", "weight": 0.10, "holding_value": 4872.3}
+    {"symbol": "AAPL", "weight": 0.12, "latest_price": 5231.8},
+    {"symbol": "MSFT", "weight": 0.10, "latest_price": 4872.3}
   ],
   "top5": [{
             "symbol": "U",
