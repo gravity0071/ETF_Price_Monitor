@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const UploadPanel = ({ onUploaded }) => {
+const UploadPanel = ({ onUploaded, sessionId, setSessionId }) => {
     const [file, setFile] = useState(null);
 
-    const handleFileChange = (e) => setFile(e.target.files[0]);
+    const handleFileChange = (e) => {setFile(e.target.files[0]);console.log(e)}
 
     const handleUpload = async () => {
         if (!file) return alert("Please select an ETF CSV file first.");
@@ -14,9 +14,13 @@ const UploadPanel = ({ onUploaded }) => {
         const days = 90;
 
         try {
-            const res = await axios.post(`http://127.0.0.1:8000/upload?days=${days}`, formData, {
-                headers: { "Content-Type": "multipart/form-data" },
-            });
+            const res = await axios.post(`http://127.0.0.1:8000/upload`, formData,
+                {
+                    params: {days: days,
+                    session_id: sessionId
+                    },
+                    headers: {"Content-Type": "multipart/form-data"},
+                });
             if (onUploaded) {
                 onUploaded(res.data);
             }

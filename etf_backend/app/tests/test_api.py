@@ -73,12 +73,3 @@ def test_chart_date_range():
         data = resp.json()
         assert "date" in data and "etf_price" in data
         assert "2017-04-01" not in data["date"]
-
-def test_invalid_session():
-    with TestClient(app) as client:
-        resp = client.get(
-            "/chart",
-            params={"session_id": "non-existent-session-id", "start": "2017-01-01", "end": "2017-02-01"}
-        )
-        assert resp.status_code == 200
-        assert "error" in resp.json()

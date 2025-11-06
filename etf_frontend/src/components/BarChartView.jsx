@@ -8,19 +8,12 @@ import {
     Tooltip,
     ResponsiveContainer,
 } from "recharts";
+import "./BarChartView.css"
 
 const BarChartView = ({data}) => {
     return (
-        <div
-            style={{
-                width: "100%",
-                height: "100%",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-            }}
-        >
-            <h3 style={{ textAlign: "center", marginBottom: "10px" }}>Top 5 Holdings</h3>
+        <div className="bar-chart-container">
+            <h3 className="bar-chart-title">Top 5 Holdings</h3>
             <ResponsiveContainer>
                 <BarChart data={data} margin={{ top: 10, right: 20, left: 10, bottom: 10 }}>
                     <CartesianGrid strokeDasharray="3 3" />

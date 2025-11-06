@@ -35,7 +35,7 @@ const LineChartView = ({chartData}) => {
                 },
                 backgroundColor: "rgba(50, 50, 50, 0.9)",
                 textStyle: {color: "#fff", fontSize: 12},
-                axisPointer: {type: "line"},
+                axisPointer: {type: "cross"},
             },
             grid: {
                 top: 50,
@@ -95,18 +95,23 @@ const LineChartView = ({chartData}) => {
                     },
                 },
             ],
+            animation: true,
             animationDuration: 700,
             animationEasing: "quadraticOut",
         };
 
         myChart.setOption(option);
 
-        const resizeObserver = new ResizeObserver(() => myChart.resize());
-        resizeObserver.observe(chartDom);
+        const handleResize = () => {
+            requestAnimationFrame(() => {
+                if (myChart && !myChart.isDisposed()) myChart.resize();
+            });
+        };
+        window.addEventListener("resize", handleResize);
 
         return () => {
+            window.removeEventListener("resize", handleResize);
             myChart.dispose();
-            resizeObserver.disconnect();
         };
     }, [chartData]);
 

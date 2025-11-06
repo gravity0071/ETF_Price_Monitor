@@ -42,15 +42,15 @@ function App() {
     return (
         <div className="dashboard">
             <div className="line-chart-panel">
-                {chart ? (
+                {data ? (
                     <>
                         <LineChartView chartData={chart}/>
                         <div className="timebar">
-                            <button onClick={() => fetchRange(7)}>1W</button>
-                            <button onClick={() => fetchRange(30)}>1M</button>
-                            <button onClick={() => fetchRange(90)}>3M</button>
-                            <button onClick={() => fetchRange(180)}>6M</button>
-                            <button onClick={() => fetchRange(365)}>1Y</button>
+                            <button className={chart.date.length <= 7 ? "active" : ""} onClick={() => fetchRange(7)}>1W</button>
+                            <button className={chart.date.length > 7  && chart.date.length < 90 ? "active" : ""}onClick={() => fetchRange(30)}>1M</button>
+                            <button className={chart.date.length >= 90  && chart.date.length < 180 ? "active" : ""}onClick={() => fetchRange(90)}>3M</button>
+                            <button className={chart.date.length >= 180 && chart.date.length <= 365 ? "active" : ""}onClick={() => fetchRange(180)}>6M</button>
+                            <button className={chart.date.length >= 365 ? "active" : ""} onClick={() => fetchRange(365)}>1Y</button>
                         </div>
                     </>
                 ) : (
@@ -67,7 +67,7 @@ function App() {
             </div>
 
             <div className="upload-panel">
-                <UploadPanel onUploaded={handleUploaded}/>
+                <UploadPanel onUploaded={handleUploaded} sessionId={sessionId} setSessionId={setSessionId} />
             </div>
         </div>
     )

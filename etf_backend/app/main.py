@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile, File, Query
+from fastapi import FastAPI, Depends, Query
 from pathlib import Path
 from fastapi import UploadFile, File
 import pandas as pd
@@ -7,6 +7,7 @@ from app.services.price_store import PriceStore
 from app.services.session_store import etf_session_store
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+import uvicorn
 
 app = FastAPI()
 
@@ -15,17 +16,27 @@ app.add_middleware(
     allow_origins=["*"],
 )
 price_store = None
-session_store = etf_session_store()
+session_store = None
+
+def get_current_user(session_id: str = Query(...)):
+    if session_id is None or session_id not in session_store.sessions:
+        raise ValueError("not logged in")
+    print(session_id)
+    return session_id
 
 @app.on_event("startup")
 def startup_event():
     global price_store
     global session_store
     data_path = Path(__file__).resolve().parent / "static" / "prices.csv"
-    price_store = PriceStore(data_path, refresh_interval=60 * 60)
-    price_store.start()
     session_store = etf_session_store()
+    price_store = PriceStore(data_path, session_store, refresh_interval=60*60*24)
+    price_store.start()
     print("PriceStore and SessionStore initialized.")
+
+@app.on_event("shutdown")
+def shutdown_event():
+    price_store.stop()
 
 @app.post("/upload")
 def upload_etf(
@@ -49,7 +60,8 @@ def upload_etf(
 
 
 @app.get("/chart")
-def get_chart(session_id: str = Query(...), start: str = Query(None), end: str = Query(None)):
+def get_chart(session_id: str = Query(...), start: str = Query(None), end: str = Query(None), user_id = Depends(get_current_user)):
+    print(f"from getChart func: user_id_seesion_id {user_id}")
     df = session_store.get_session(session_id)
     if df is None:
         return {"error": "Session not found"}
@@ -59,5 +71,4 @@ def get_chart(session_id: str = Query(...), start: str = Query(None), end: str =
     return chart_data
 
 if __name__ == "__main__":
-    import uvicorn
     uvicorn.run("app.main:app", host="127.0.0.1", port=8000, reload=True)

@@ -1,15 +1,15 @@
-import React, { useState, useMemo } from "react";
+import React, {useState, useMemo} from "react";
 import "./TableView.css";
 
-function TableView({ data, title = "Holdings Table" }) {
-    const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
+const TableView = ({data, title = "Holdings Table"}) => {
+    const [sortConfig, setSortConfig] = useState({key: null, direction: null});
 
     const handleSort = (key) => {
         let direction = "asc";
         if (sortConfig.key === key && sortConfig.direction === "asc") {
             direction = "desc";
         }
-        setSortConfig({ key, direction });
+        setSortConfig({key, direction});
     };
 
     const sortedData = useMemo(() => {
